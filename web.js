@@ -4,6 +4,13 @@ var app = express.createServer(express.logger());
 
 var msg = "Hello World 2+!";
 
+var fs = require('fs');
+
+var buffer = fs.readFileSync('index.html');
+
+// now over-ride msg
+msg = buffer.toString();  
+
 app.get('/', function(request, response) {
   response.send(msg);
 });
