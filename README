@@ -1,12 +1,27 @@
 This is the bare framework of the "bitstarter",
 part of "HW#3" assignment (for the Coursera 
 Startup Engineering MOOC thingy), but more importantly,
-the beginnings of a real useful web app. Whoo hoo!
+the beginnings of a real useful web app. 
 
-At first, this was just a file to make my name on this project,
-and show that the fork is growing independently.
+Whoo hoo!
 
-However, now it is just a file to say silly things.
+Now, I have never done anything non-trivial with async code
+before, but more importantly, I didn't realize restler was
+async because, well, I didn't RTFM I guess. However, that 
+hit a lot of people on the forumns and it could have been
+made more obvious.
+
+Nonetheless, I finished my working version of the grader.js
+before I hit the forumns, so I figured it out all by myself,
+yah me. 
+
+Async stuff is a skill I need to get better at so I will work
+diligently on it. It is not 'fun' yet but I get the impression
+that it will become so. At the very least, it will be another,
+very valuable skill. 
+
+
+>>> Some totally irrelevant ranting:
 
 I think I'm supposed to make a reference to some 
 sorta game, like maybe complaining that hunting a 
