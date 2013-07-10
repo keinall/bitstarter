@@ -21,6 +21,9 @@ References:
    - https://developer.mozilla.org/en-US/docs/JSON#JSON_in_Firefox_2
 */
 
+var verbose = false; /* This finally works but I now hate node.js */
+if (verbose) console.log("Verbose mode enabled (easier debugging).");
+
 var fs = require('fs');
 // now, restler stuff so we can pull URLs
 var util = require('util');
@@ -31,8 +34,9 @@ var cheerio = require('cheerio');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 //var URL_DEFAULT = "http://whispering-badlands-6738.herokuapp.com/"; 
-var URL_DEFAULT = null ; // special market to avoid dowloading
-var DL_LOCATION = "~/bitstarter/testme.html"; // local copy of URL
+var URL_DEFAULT = "none" ; // special market to avoid dowloading
+//var DL_LOCATION = "~/bitstarter/testme.html"; // local copy of URL
+var DL_LOCATION = "testme.html"; // full path might have been trouble
 
 var assertFileExists = function(infile) {
 
@@ -45,14 +49,19 @@ var assertFileExists = function(infile) {
 };
 
 var assertURLWorks = function(givenurl) {
-/* this is not only an assert, it actually has side effect:
-** downloads the URL into DL_LOCATION, and 
-** sets up program as if user said to test that file instead.
-** It should work, but I don't think it is very elegant.
+/*
+** TODO: actually check the URL, maybe, lol.
 */
+   
     if ( givenurl == null ) {
-	return; /// do nothing, unless we really have a URL
+	return "none"; /// do nothing, unless we really have a URL
+    } else {
+	return givenurl;
     };
+};
+
+var downloadURL = function(givenurl, checksfile) {
+    if (verbose) console.log("Attempting to download from URL: " + givenurl);
 
     rest.get(givenurl).on('complete', function(result) {
 	if (result instanceof Error) {
@@ -62,11 +71,15 @@ var assertURLWorks = function(givenurl) {
 	    fs.writeFile(DL_LOCATION, result, function(err) {
 		if (err) throw err;
 		else {
-		    // setup rest of program to run smoothly
-		    //assertFileExists(DL_LOCATION);
-		    console.log("Read url to %s okay.", DL_LOCATION);
-		    // i.e. do nothing else of value
-		};
+		    if (verbose) console.log("Read url from %s to %s okay.", givenurl, DL_LOCATION);
+		  // do rest of processing here 
+		    //var out = checkHtmlFile( DL_LOCATION,checksfile) ;
+		    display_results( checkHtmlFile( DL_LOCATION, checksfile ) );
+		    //return out;
+		  //var out = checkHtmlFile( (DL_LOCATION, checksfile) );
+		  //return out; 
+		    
+		 };
 	    });
 	}
     });
@@ -81,6 +94,8 @@ var loadChecks = function(checksfile) {
 };
 
 var checkHtmlFile = function(htmlfile, checksfile) {
+    if (verbose) console.log("Checking %s vs. %s.", htmlfile, checksfile);
+
     $ = cheerioHtmlFile(htmlfile);
     var checks = loadChecks(checksfile).sort();
     var out = {};
@@ -88,7 +103,21 @@ var checkHtmlFile = function(htmlfile, checksfile) {
         var present = $(checks[ii]).length > 0;
         out[checks[ii]] = present;
     }
+
+    if (verbose) {
+	console.log("Checking complete, returning results.");
+//	console.log("Results are:" + out.length + " long.");
+    };
+
     return out;
+};
+
+var checkURL = function(givenurl, checksfile) {
+    if (verbose) console.log("Downloading from " + givenurl);
+    return downloadURL( givenurl , checksfile );
+
+    console.error("Fall-thru in checkURL.");
+    process.exit(1);
 };
 
 var clone = function(fn) {
@@ -97,20 +126,43 @@ var clone = function(fn) {
     return fn.bind({});
 };
 
+
+
 if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
         .option('-u, --url <url_link>', 'URL to live index.html', clone(assertURLWorks), URL_DEFAULT)
         .parse(process.argv);
-    if ( program.url == null ) { 
+    if ( program.url == URL_DEFAULT ) {
+	if (verbose) console.log("No URL given so testing a local file.");
 	var checkJson = checkHtmlFile(program.file, program.checks);
+	var outJson = JSON.stringify(checkJson, null, 4);
+	console.log(outJson);
     } else {
-	var checkJson = checkHtmlFile(DL_LOCATION, program.checks);
+	if (verbose) console.log("Attempting to test a URL.");
+//	var checkJson = 
+	    checkURL(program.url, program.checks);
+	if (verbose) console.log("checkURL() has just returned;");
+	// checkURL starts around thread or something, so it never returns
+	// anything useful, it seems.
+//	var outJson = JSON.stringify(checkJson, null, 4);
+//	console.log(outJson);// always evaulates empty due to latent dl path.
+	if (verbose) console.log("Output of checkURL has already been displayed.");
     };
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
+//    var outJson = JSON.stringify(checkJson, null, 4);
+//    console.log(outJson);
+
+    if (verbose) console.log("Done.");
+   
 } else {
     exports.checkHtmlFile = checkHtmlFile;
+    exports.checkURL = checkURL;
 }
+
+function display_results(output) {
+    var outJson = JSON.stringify(output, null, 4);
+    console.log(outJson);
+};
+
 
