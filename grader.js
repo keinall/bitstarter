@@ -21,13 +21,13 @@ References:
    - https://developer.mozilla.org/en-US/docs/JSON#JSON_in_Firefox_2
 */
 
-var verbose = false; /* This finally works but I now hate node.js */
+var verbose = false; /* Enable for more fun with aysnc programming */
 if (verbose) console.log("Verbose mode enabled (easier debugging).");
 
 var fs = require('fs');
 // now, restler stuff so we can pull URLs
 var util = require('util');
-var rest = require('restler');
+var rest = require('restler');/* "Hi, I'm asynchronous, but shhhhh!" */
 
 var program = require('commander');
 var cheerio = require('cheerio');
@@ -54,7 +54,7 @@ var assertURLWorks = function(givenurl) {
 */
    
     if ( givenurl == null ) {
-	return "none"; /// do nothing, unless we really have a URL
+	return "none"; // do nothing, unless we really have a URL
     } else {
 	return givenurl;
     };
@@ -73,12 +73,7 @@ var downloadURL = function(givenurl, checksfile) {
 		else {
 		    if (verbose) console.log("Read url from %s to %s okay.", givenurl, DL_LOCATION);
 		  // do rest of processing here 
-		    //var out = checkHtmlFile( DL_LOCATION,checksfile) ;
 		    display_results( checkHtmlFile( DL_LOCATION, checksfile ) );
-		    //return out;
-		  //var out = checkHtmlFile( (DL_LOCATION, checksfile) );
-		  //return out; 
-		    
 		 };
 	    });
 	}
@@ -105,14 +100,19 @@ var checkHtmlFile = function(htmlfile, checksfile) {
     }
 
     if (verbose) {
-	console.log("Checking complete, returning results.");
+		console.log("Checking complete, returning results.");
 //	console.log("Results are:" + out.length + " long.");
-    };
+		var nProp = 0;
+		for (var prop in out) {
+			nProp ++;
+			}
+		console.log("Found " + nProp + " properties in output object.");
+	};
 
     return out;
 };
 
-var checkURL = function(givenurl, checksfile) {
+var checkURL = function(givenurl, checksfile) { 
     if (verbose) console.log("Downloading from " + givenurl);
     return downloadURL( givenurl , checksfile );
 
@@ -141,28 +141,18 @@ if(require.main == module) {
 	console.log(outJson);
     } else {
 	if (verbose) console.log("Attempting to test a URL.");
-//	var checkJson = 
 	    checkURL(program.url, program.checks);
-	if (verbose) console.log("checkURL() has just returned;");
-	// checkURL starts around thread or something, so it never returns
-	// anything useful, it seems.
-//	var outJson = JSON.stringify(checkJson, null, 4);
-//	console.log(outJson);// always evaulates empty due to latent dl path.
-	if (verbose) console.log("Output of checkURL has already been displayed.");
+	if (verbose) console.log("checkURL() has just returned (main stream only, latent co-routine still in effect).");
     };
-//    var outJson = JSON.stringify(checkJson, null, 4);
-//    console.log(outJson);
 
     if (verbose) console.log("Done.");
    
-} else {
+} else { /* allows functions to be called from a library rather than commnand line */
     exports.checkHtmlFile = checkHtmlFile;
-    exports.checkURL = checkURL;
+    exports.checkURL = checkURL; // NOTE: spawns a latent bknd co-routine, or something; 
 }
 
 function display_results(output) {
     var outJson = JSON.stringify(output, null, 4);
     console.log(outJson);
 };
-
-
