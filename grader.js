@@ -137,8 +137,9 @@ if(require.main == module) {
     if ( program.url == URL_DEFAULT ) {
 	if (verbose) console.log("No URL given so testing a local file.");
 	var checkJson = checkHtmlFile(program.file, program.checks);
-	var outJson = JSON.stringify(checkJson, null, 4);
-	console.log(outJson);
+	display_results(checkJson);
+//	var outJson = JSON.stringify(checkJson, null, 4);
+//	console.log(outJson);
     } else {
 	if (verbose) console.log("Attempting to test a URL.");
 	    checkURL(program.url, program.checks);
