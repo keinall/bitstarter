@@ -1,50 +1,17 @@
-This is the bare framework of the "bitstarter",
-part of "HW#3" assignment (for the Coursera 
-Startup Engineering MOOC thingy), but more importantly,
-the beginnings of a real useful web app. 
+Maybe what I should have been doing, 
+is keeping a "plan" file.
 
-Whoo hoo!
+Anyhow, the latest index.html still looks rough,
+because really, I don't have a startup idea that 
+I would like to do on my own. Running a small business
+is hard, startups are harder, and for my sanity (if I still
+have any left), I would not try that alone, again.
 
-Now, I have never done anything non-trivial with async code
-before, but more importantly, I didn't realize restler was
-async because, well, I didn't RTFM I guess. However, that 
-hit a lot of people on the forumns and it could have been
-made more obvious.
+You're never alone anyhow, context makes all the difference.
 
-Nonetheless, I finished my working version of the grader.js
-before I hit the forumns, so I figured it out all by myself,
-yah me. 
+Anyhow, enjoying the technical aspects of the course, 
+and hopefully I will find time to do some custom graphics
+and so forth: even if this is not going to be an actual business,
+it should still look like it, right?
 
-Async stuff is a skill I need to get better at so I will work
-diligently on it. It is not 'fun' yet but I get the impression
-that it will become so. At the very least, it will be another,
-very valuable skill. 
-
-
->>> Some totally irrelevant ranting:
-
-I think I'm supposed to make a reference to some 
-sorta game, like maybe complaining that hunting a 
-Tomato for three hours is not my idea of "fun" and
-I have no idea what Square was thinking with 
-Final Fantasy 12, but moreso, what human masses
-were thinking by not only buying it, but freaking
-well enduring it and claiming is gameplay. Then
-apparently giving Sadie death threats when she 
-dared to speak the truth? Lame, "gamers", lame. 
-
-Chrono Trigger is fun... Final Fantasy games after six,
-well, I've yet to be convinced that there is any
-merit to any of them. "Interactive movie" is not always
-a good idea. Interactive world, sure. Give meaningful
-choices and the illusion of the player being in 
-control, not "just press X". 
-
-Okay, that ends my irrelevant rant. I'll go back to
-doing JavaScript / node.js stuff now.
-
-Started: 2013-07-04 (Thursday) 
-Rant: 2013-Jul-10 (Wednesday), for no reason.
-
-- Keinall 
 
